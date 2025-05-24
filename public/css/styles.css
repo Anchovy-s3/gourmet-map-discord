@@ -31,12 +31,21 @@ main {
 @media (max-width: 768px) {
     main {
         flex-direction: column;
+        padding: 0.5rem;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+    }
+    
+    h2 {
+        font-size: 1.2rem;
     }
 }
 
 #map-container {
     flex: 2;
-    min-height: 70vh;
+    min-height: 50vh;
     margin-right: 1rem;
     border-radius: 8px;
     overflow: hidden;
@@ -46,6 +55,30 @@ main {
 #map {
     height: 100%;
     width: 100%;
+    touch-action: pan-x pan-y; /* モバイルデバイスでのピンチズームやスクロールを改善 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* マップエラー表示用スタイル */
+#map .map-error {
+    text-align: center;
+    padding: 20px;
+    color: #c00;
+    background-color: #ffeaea;
+    border-radius: 8px;
+    max-width: 80%;
+}
+
+#map .map-error button {
+    padding: 8px 16px;
+    background: #4A55A2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
 }
 
 #restaurant-list-container {
@@ -56,6 +89,35 @@ main {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     max-height: 70vh;
     overflow-y: auto;
+}
+
+/* スマホ向け調整 */
+@media (max-width: 768px) {
+    #map-container {
+        margin-right: 0;
+        margin-bottom: 1rem;
+        min-height: 60vh;
+    }
+    
+    #restaurant-list-container {
+        max-height: none;
+        height: auto;
+        padding: 0.75rem;
+    }
+    
+    .restaurant-item {
+        padding: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .filter-controls {
+        margin-bottom: 0.75rem;
+    }
+    
+    input[type="text"] {
+        padding: 0.4rem;
+        font-size: 0.95rem;
+    }
 }
 
 h2 {
@@ -95,22 +157,45 @@ input[type="text"] {
     transform: translateX(5px);
 }
 
+.restaurant-item-active {
+    background-color: #d9e3ff !important;
+    transform: translateX(5px);
+    transition: background-color 0.2s;
+}
+
 .restaurant-name {
     font-weight: bold;
     color: #4A55A2;
     margin-bottom: 0.25rem;
+    word-break: break-word;
 }
 
 .restaurant-address {
     font-size: 0.9rem;
     color: #666;
     margin-bottom: 0.25rem;
+    word-break: break-word;
 }
 
 .restaurant-links {
     font-size: 0.85rem;
     display: flex;
     justify-content: space-between;
+}
+
+@media (max-width: 480px) {
+    .restaurant-name {
+        font-size: 0.95rem;
+    }
+    
+    .restaurant-address {
+        font-size: 0.85rem;
+    }
+    
+    .restaurant-links {
+        font-size: 0.8rem;
+        flex-wrap: wrap;
+    }
 }
 
 .restaurant-links a {
@@ -131,6 +216,13 @@ footer {
     margin-top: auto;
 }
 
+@media (max-width: 480px) {
+    footer {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+}
+
 /* Google Maps 情報ウィンドウのスタイル */
 .info-window {
     padding: 0.5rem;
@@ -141,6 +233,17 @@ footer {
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
     color: #4A55A2;
+}
+
+.info-window-warning {
+    color: #FF4500;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    background-color: #FFEECC;
+    padding: 5px;
+    border-radius: 3px;
+    border-left: 3px solid #FF4500;
 }
 
 .info-window-address {
@@ -157,4 +260,35 @@ footer {
     color: #4A55A2;
     text-decoration: none;
     font-size: 0.85rem;
+}
+
+/* スマホ向け情報ウィンドウの調整 */
+@media (max-width: 480px) {
+    .info-window {
+        max-width: 250px;
+        padding: 0.3rem;
+    }
+    
+    .info-window-name {
+        font-size: 1rem;
+        word-break: break-all;
+    }
+    
+    .info-window-address {
+        font-size: 0.8rem;
+        word-break: break-all;
+    }
+    
+    .info-window-links {
+        flex-direction: column;
+    }
+    
+    .info-window-links a {
+        font-size: 0.8rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .restaurant-item {
+        padding: 0.5rem;
+    }
 }

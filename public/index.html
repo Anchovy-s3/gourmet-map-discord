@@ -28,32 +28,60 @@
     <footer>
         <p>© 2025 Discord 食べログ マップ</p>
     </footer>
-    
-    <script src="js/app.js"></script>
+      <script src="js/app.js"></script>
     <script>
-        // Google Maps API の読み込み
-        async function loadGoogleMapsScript() {
+        // DOMが読み込まれたらGoogle Maps APIキーを取得して初期化
+        document.addEventListener('DOMContentLoaded', async function() {
             try {
+                // APIキーを取得
                 const response = await fetch('/api/config/maps-api-key');
                 const data = await response.json();
+                
                 if (data && data.apiKey) {
+                    // Google Maps APIスクリプトを動的に読み込み
                     const script = document.createElement('script');
-                    script.src = `https://maps.googleapis.com/maps/api/js?key=${data.apiKey}&callback=initMap`;
+                    script.src = `https://maps.googleapis.com/maps/api/js?key=${data.apiKey}&callback=initMapWithAPI`;
                     script.async = true;
                     script.defer = true;
+                    
+                    // グローバル関数を定義して、APIロード後にマップを初期化
+                    window.initMapWithAPI = function() {
+                        if (typeof initMap === 'function') {
+                            console.log('Google Maps API読み込み完了、マップを初期化します');
+                            initMap();
+                        } else {
+                            console.error('initMap関数が見つかりません');
+                        }
+                    };
+                    
+                    // エラーハンドリング
+                    script.onerror = function() {
+                        console.error('Google Maps API の読み込みに失敗しました');
+                        document.getElementById('map').innerHTML = 
+                            '<div style="text-align:center;padding:20px;color:#c00;">' +
+                            '<p>Google Maps の読み込みに失敗しました</p>' +
+                            '<button onclick="location.reload()">再読み込み</button>' +
+                            '</div>';
+                    };
+                    
                     document.body.appendChild(script);
                 } else {
                     console.error('APIキーが取得できませんでした');
+                    document.getElementById('map').innerHTML = 
+                        '<div style="text-align:center;padding:20px;color:#c00;">' +
+                        '<p>Google Maps APIキーが取得できませんでした</p>' +
+                        '<button onclick="location.reload()">再試行</button>' +
+                        '</div>';
                 }
             } catch (error) {
                 console.error('Google Maps APIの読み込みに失敗しました:', error);
+                document.getElementById('map').innerHTML = 
+                    '<div style="text-align:center;padding:20px;color:#c00;">' +
+                    '<p>エラーが発生しました: ' + error.message + '</p>' +
+                    '<button onclick="location.reload()">再試行</button>' +
+                    '</div>';
             }
-        }
-        
-        // ページ読み込み後にGoogle Maps APIを読み込む
-        window.onload = function() {
-            loadGoogleMapsScript();
-        };
+        });
     </script>
 </body>
 </html>
