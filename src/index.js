@@ -185,6 +185,11 @@ app.get('/api/restaurants', (req, res) => {
   }
 });
 
+// ヘルスチェックエンドポイント（Docker/Nginx用）
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 // Google Maps APIキーを提供するAPI
 app.get('/api/config/maps-api-key', (req, res) => {
   try {
