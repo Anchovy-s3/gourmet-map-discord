@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord 食べログ マップ</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Discord 食べログ マップ</h1>
+    </header>
+    
+    <main>
+        <div id="map-container">
+            <div id="map"></div>
+        </div>
+        
+        <div id="restaurant-list-container">
+            <h2>登録店舗一覧</h2>
+            <div class="filter-controls">
+                <input type="text" id="search-input" placeholder="店舗名で検索...">
+            </div>
+            <ul id="restaurant-list"></ul>
+        </div>
+    </main>
+    
+    <footer>
+        <p>© 2025 Discord 食べログ マップ</p>
+    </footer>
+    
+    <script src="js/app.js"></script>
+    <script>
+        // Google Maps API の読み込み
+        async function loadGoogleMapsScript() {
+            try {
+                const response = await fetch('/api/config/maps-api-key');
+                const data = await response.json();
+                if (data && data.apiKey) {
+                    const script = document.createElement('script');
+                    script.src = `https://maps.googleapis.com/maps/api/js?key=${data.apiKey}&callback=initMap`;
+                    script.async = true;
+                    script.defer = true;
+                    document.body.appendChild(script);
+                } else {
+                    console.error('APIキーが取得できませんでした');
+                }
+            } catch (error) {
+                console.error('Google Maps APIの読み込みに失敗しました:', error);
+            }
+        }
+        
+        // ページ読み込み後にGoogle Maps APIを読み込む
+        window.onload = function() {
+            loadGoogleMapsScript();
+        };
+    </script>
+</body>
+</html>
