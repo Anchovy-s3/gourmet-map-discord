@@ -29,6 +29,7 @@ Discord上で共有された食べログURLから店舗情報を自動的に抽�
 
 ### 環境の切り替え
 
+#### Windows環境の場合：
 プロジェクトルートディレクトリで以下のコマンドを実行します：
 
 ```powershell
@@ -40,6 +41,24 @@ Discord上で共有された食べログURLから店舗情報を自動的に抽�
 
 # 本番環境に切り替え
 .\switch-env.ps1 production
+```
+
+#### Linux/Ubuntu環境の場合：
+まず、スクリプトに実行権限を付与します：
+
+```bash
+# スクリプトに実行権限を付与
+chmod +x switch-env.sh
+chmod +x run-app.sh
+
+# 開発環境に切り替え
+./switch-env.sh development
+
+# ローカル環境に切り替え
+./switch-env.sh local
+
+# 本番環境に切り替え
+./switch-env.sh production
 ```
 
 ### アプリケーションの起動

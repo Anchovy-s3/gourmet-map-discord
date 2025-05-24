@@ -41,7 +41,8 @@ docker-compose -f docker-compose.current.yml down
 
 # コンテナを起動
 Write-Host "[$Environment]環境のコンテナを起動中..." -ForegroundColor Green
-docker-compose -f docker-compose.current.yml up -d --build
+docker-compose -f docker-compose.current.yml down --remove-orphans
+docker-compose -f docker-compose.current.yml up -d --build --remove-orphans
 
 # 起動状態を確認
 Write-Host "`nコンテナの状態:" -ForegroundColor Cyan

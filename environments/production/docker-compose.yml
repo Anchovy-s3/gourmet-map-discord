@@ -1,15 +1,13 @@
 version: '3.8'
 
 services:
-  app:
-    build:
+  app:    build:
       context: ../../
       dockerfile: ./environments/production/Dockerfile
-    container_name: gourmet-map-discord
+    container_name: gourmet-map-discord-prod
     expose:
-      - "3000"
-    volumes:
-      - ../../data:/app/data
+      - "3000"    volumes:
+      - ./../../data:/app/data:rw
     environment:
       - NODE_ENV=production
       - DISCORD_TOKEN=${DISCORD_TOKEN}
