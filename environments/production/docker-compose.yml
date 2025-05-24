@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ../../
+      dockerfile: ./environments/production/Dockerfile
+    container_name: gourmet-map-discord
+    expose:
+      - "3000"
+    volumes:
+      - ../../data:/app/data
+    environment:
+      - NODE_ENV=production
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
+      - PORT=3000
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').request({port:3000,path:'/health',timeout:2000}, (r) => {process.exit(r.statusCode === 200 ? 0 : 1)}).end()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  nginx:
+    image: nginx:alpine
+    container_name: gourmet-map-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - app
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge

@@ -6,6 +6,29 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const { Client, GatewayIntentBits } = require('discord.js');
 
+// 環境変数に基づいて設定を調整
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
+
+// 環境情報を表示
+console.log(`アプリケーション起動: 環境[${NODE_ENV}], ログレベル[${LOG_LEVEL}]`);
+
+// 環境に応じたロガー設定
+const logger = {
+  debug: (message) => {
+    if (['debug'].includes(LOG_LEVEL)) console.log(`[DEBUG] ${message}`);
+  },
+  info: (message) => {
+    if (['debug', 'info'].includes(LOG_LEVEL)) console.log(`[INFO] ${message}`);
+  },
+  warn: (message) => {
+    if (['debug', 'info', 'warn'].includes(LOG_LEVEL)) console.warn(`[WARN] ${message}`);
+  },
+  error: (message) => {
+    console.error(`[ERROR] ${message}`);
+  }
+};
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, '../data/restaurants.json');
@@ -177,10 +200,11 @@ async function extractRestaurantInfo(url, messageUrl) {
 // レストラン情報を取得するAPI
 app.get('/api/restaurants', (req, res) => {
   try {
+    logger.debug('レストラン情報の取得リクエスト');
     const restaurants = loadRestaurants();
     res.json(restaurants);
   } catch (error) {
-    console.error('Error loading restaurants:', error);
+    logger.error(`レストラン読み込みエラー: ${error}`);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

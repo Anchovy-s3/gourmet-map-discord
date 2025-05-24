@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ../../
+      dockerfile: ./environments/development/Dockerfile
+    container_name: gourmet-map-discord-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../../src:/app/src
+      - ../../public:/app/public
+      - ../../data:/app/data
+      - ../../package.json:/app/package.json
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
+      - PORT=3000
+    restart: unless-stopped
+    command: npm run dev
